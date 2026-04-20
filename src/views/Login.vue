@@ -61,7 +61,7 @@ async function login() {
         <h2
           class="text-2xl lg:text-3xl font-bold mb-6 text-gray-800 text-center"
         >
-          Faça login na sua conta
+          Faça seu login
         </h2>
 
         <div class="space-y-4">
@@ -93,8 +93,9 @@ async function login() {
             <p class="text-sm text-gray-500 mb-2">Usuário e senha para teste</p>
 
             <div class="space-y-1">
-              <div class="text-base font-semibold text-gray-700">
-                admin@teste.com
+              <div class="text-base text-gray-600">
+                E-mail:
+                <span class="font-medium text-gray-800">admin@teste.com</span>
               </div>
 
               <div class="text-base text-gray-600">
