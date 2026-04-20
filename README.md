@@ -68,13 +68,6 @@ npm install
 npm run dev
 ```
 
-### 🧪 Rodar testes
-
-```bash
-npm run test
-
-```
-
 ````
 
 ## 📁 Estrutura do Projeto
