@@ -62,21 +62,15 @@ async function logout() {
         </router-link>
 
         <router-link
-          to="/perfil"
-          class="px-3 py-2 rounded-lg transition"
-          :class="
-            route.path === '/perfil' ? 'bg-white/20' : 'hover:bg-white/10'
-          "
+          to=""
+          class="px-3 py-2 rounded-lg transition opacity-50 cursor-not-allowed pointer-events-none"
         >
           👤 Cadastro de Perfil
         </router-link>
 
         <router-link
-          to="/enderecos"
-          class="px-3 py-2 rounded-lg transition"
-          :class="
-            route.path === '/enderecos' ? 'bg-white/20' : 'hover:bg-white/10'
-          "
+          to=""
+          class="px-3 py-2 rounded-lg transition opacity-50 cursor-not-allowed pointer-events-none"
         >
           📍 Cadastro de Endereços
         </router-link>
