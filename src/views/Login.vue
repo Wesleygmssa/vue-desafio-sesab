@@ -1,0 +1,94 @@
+<script setup>
+import { ref } from 'vue';
+import { api } from '@/services/api';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+const email = ref('');
+const password = ref('');
+const error = ref('');
+const loading = ref(false);
+
+async function login() {
+  error.value = '';
+  loading.value = true;
+
+  try {
+    const response = await api.post('/login', {
+      email: email.value,
+      password: password.value,
+    });
+
+    localStorage.setItem('token', response.data.token);
+    localStorage.setItem('user', JSON.stringify(response.data.user));
+
+    router.push('/users');
+  } catch (err) {
+    error.value = err.response?.data?.message || 'Erro ao logar';
+  } finally {
+    loading.value = false;
+  }
+}
+</script>
+
+<template>
+  <div class="fixed inset-0 flex overflow-hidden">
+    <!-- IMAGEM -->
+    <div
+      class="hidden md:flex w-1/2 h-full bg-gradient-to-br from-blue-600 to-indigo-700 items-center justify-center p-10"
+    >
+      <div class="text-center text-white">
+        <h1 class="text-3xl lg:text-4xl font-bold mb-4">Bem-vindo 👋</h1>
+        <p class="text-base lg:text-lg opacity-90">
+          Sistema de gerenciamento de usuários com Vue.js, Tailwind CSS e PHP
+          Laravel. Faça login para acessar a dashboard e gerenciar seus usuários
+          de forma fácil e eficiente!
+        </p>
+      </div>
+    </div>
+
+    <!-- LOGIN -->
+    <div
+      class="w-full md:w-1/2 h-full flex items-center justify-center bg-gray-100 px-6"
+    >
+      <div class="w-full max-w-md">
+        <h2
+          class="text-2xl lg:text-3xl font-bold mb-6 text-gray-800 text-center"
+        >
+          Login
+        </h2>
+
+        <div class="space-y-4">
+          <input
+            v-model="email"
+            type="email"
+            placeholder="Email"
+            class="w-full px-4 py-3 border-b-2 border-gray-300 bg-transparent focus:outline-none focus:border-blue-500 transition"
+          />
+
+          <input
+            v-model="password"
+            type="password"
+            placeholder="Senha"
+            class="w-full px-4 py-3 border-b-2 border-gray-300 bg-transparent focus:outline-none focus:border-blue-500 transition"
+            @keyup.enter="login"
+          />
+
+          <button
+            @click="login"
+            :disabled="loading"
+            class="cursor-pointer w-full py-3 rounded-xl text-white font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 shadow-lg disabled:opacity-50"
+          >
+            <span v-if="loading">Entrando...</span>
+            <span v-else>Entrar</span>
+          </button>
+
+          <p v-if="error" class="text-red-500 text-sm text-center">
+            {{ error }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
