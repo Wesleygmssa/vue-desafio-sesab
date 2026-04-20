@@ -87,6 +87,6 @@ Este projeto é licenciado sob a [MIT License](LICENSE). Sinta-se à vontade par
 
 ## 📞 Contato
 
-Se você tiver alguma dúvida ou quiser entrar em contato, sinta-se à vontade para me enviar um email para [seu.email@exemplo.com](mailto:seu.email@exemplo.com) ou me encontrar no LinkedIn: [linkedin.com/in/seu-perfil](https://www.linkedin.com/in/seu-perfil). Estou sempre aberto a conversar sobre tecnologia, desenvolvimento frontend e oportunidades de colaboração!
+Se você tiver alguma dúvida ou quiser entrar em contato, sinta-se à vontade para me enviar um email para [contatowesleygm@gmail.com](mailto:contatowesleygm@gmail.com) ou me encontrar no LinkedIn: [linkedin.com/in/wesleyguerra09](https://www.linkedin.com/in/wesleyguerra09/). Estou sempre aberto a conversar sobre tecnologia, desenvolvimento frontend e oportunidades de colaboração!
 
 ### Desenvolvido por [Wesley Guerra](https://www.linkedin.com/in/wesleyguerra09/)
