@@ -5,6 +5,7 @@ import { formatCPF, formatDate } from '@/utils/formatters';
 import BaseButton from '@/components/BaseButton.vue';
 import { api } from '@/services/api';
 import Toast from '@/components/Toast.vue';
+import ConfirmModal from '@/components/ConfirmModal.vue';
 
 const router = useRouter();
 
@@ -148,7 +149,17 @@ const isSelf = (user) => user.id === currentUser.value.id;
       v-if="confirmModal.show"
       class="fixed inset-0 bg-black/40 flex items-center justify-center z-40"
     >
-      <div class="bg-white rounded-2xl p-6 w-[90%] max-w-md shadow-xl">
+      <ConfirmModal
+        :show="confirmModal.show"
+        title="Confirmar exclusão"
+        :itemName="confirmModal.user?.nome"
+        confirmText="Excluir"
+        confirmColor="red"
+        @close="confirmModal.show = false"
+        @confirm="deleteUser"
+      />
+
+      <!-- <div class="bg-white rounded-2xl p-6 w-[90%] max-w-md shadow-xl">
         <h2 class="text-lg font-bold mb-3">Confirmar exclusão</h2>
 
         <p class="mb-6">
@@ -164,7 +175,7 @@ const isSelf = (user) => user.id === currentUser.value.id;
           />
           <BaseButton label="Excluir" color="red" @click="deleteUser" />
         </div>
-      </div>
+      </div> -->
     </div>
 
     <!-- HEADER -->

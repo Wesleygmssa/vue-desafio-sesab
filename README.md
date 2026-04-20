@@ -41,6 +41,10 @@ Este projeto foi desenvolvido como parte de um desafio técnico proposto pela
 
 ![Edição](./screenshots/editar.png)
 
+## Exclusão do usuário
+
+![Exclusão](./screenshots/excluir.png)
+
 ---
 
 ## ⚙️ Tecnologias utilizadas
