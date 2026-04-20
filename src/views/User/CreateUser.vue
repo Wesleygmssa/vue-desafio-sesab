@@ -75,7 +75,7 @@ async function cadastrar() {
 </script>
 
 <template>
-  <div class="max-w-8xl mx-auto mt-10 px-4 min-h-screen py-10">
+  <div class="max-w-8xl mx-auto mt-0 px-4 min-h-screen py-10">
     <!-- TOAST -->
     <Toast
       :show="toast.show"

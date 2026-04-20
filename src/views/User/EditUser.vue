@@ -90,7 +90,7 @@ async function atualizar() {
 </script>
 
 <template>
-  <div class="max-w-8xl mx-auto mt-0 px-4 min-h-screen py-5">
+  <div class="max-w-8xl mx-auto mt-0 px-4 min-h-screen py-10">
     <!-- TOAST -->
     <Toast
       :show="toast.show"
