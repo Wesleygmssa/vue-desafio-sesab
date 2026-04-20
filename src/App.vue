@@ -8,6 +8,24 @@ const route = useRoute();
 
 const user = ref(null);
 
+// desktop collapse
+const isCollapsed = ref(false);
+
+// mobile menu
+const isMobileOpen = ref(false);
+
+function toggleSidebar() {
+  isCollapsed.value = !isCollapsed.value;
+}
+
+function toggleMobileMenu() {
+  isMobileOpen.value = !isMobileOpen.value;
+}
+
+function closeMobileMenu() {
+  isMobileOpen.value = false;
+}
+
 function loadUser() {
   const storedUser = localStorage.getItem('user');
   user.value = storedUser ? JSON.parse(storedUser) : null;
@@ -26,7 +44,6 @@ onUnmounted(() => {
   window.removeEventListener('user-updated', handleUserUpdate);
 });
 
-// logout
 async function logout() {
   try {
     await api.post('/logout');
@@ -35,48 +52,60 @@ async function logout() {
   } finally {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-
-    window.dispatchEvent(new Event('user-updated'));
-
     router.push('/login');
   }
 }
 </script>
+
 <template>
   <div class="flex h-screen bg-gray-100">
     <!-- SIDEBAR -->
     <aside
       v-if="route.path !== '/login'"
-      class="w-64 text-white flex flex-col p-5"
+      :class="[
+        'text-white flex flex-col p-5 transition-all duration-300',
+        isCollapsed ? 'w-20' : 'w-64',
+      ]"
       style="background: linear-gradient(to bottom, #3448eb, #1f2fd6)"
     >
-      <h2 class="text-xl font-bold mb-8">SESAB</h2>
+      <!-- HEADER -->
+      <div class="flex items-center justify-between mb-8">
+        <h2 v-if="!isCollapsed" class="text-xl font-bold">SESAB</h2>
 
+        <button
+          @click="toggleSidebar"
+          class="text-white hover:bg-white/20 p-2 rounded-lg cursor-pointer"
+        >
+          ☰
+        </button>
+      </div>
+
+      <!-- NAV -->
       <nav class="flex flex-col gap-3">
         <router-link
           to="/users"
-          class="px-3 py-2 rounded-lg transition"
+          class="px-3 py-2 rounded-lg transition flex items-center gap-2"
           :class="route.path === '/users' ? 'bg-white/20' : 'hover:bg-white/10'"
         >
-          👥 Lista de Usuários
+          👥
+          <span v-if="!isCollapsed">Lista de Usuários</span>
         </router-link>
 
-        <router-link
-          to=""
-          class="px-3 py-2 rounded-lg transition opacity-50 cursor-not-allowed pointer-events-none"
+        <div
+          class="px-3 py-2 rounded-lg opacity-50 cursor-not-allowed pointer-events-none flex items-center gap-2"
         >
-          👤 Cadastro de Perfil
-        </router-link>
+          👤
+          <span v-if="!isCollapsed">Cadastro de Perfil</span>
+        </div>
 
-        <router-link
-          to=""
-          class="px-3 py-2 rounded-lg transition opacity-50 cursor-not-allowed pointer-events-none"
+        <div
+          class="px-3 py-2 rounded-lg opacity-50 cursor-not-allowed pointer-events-none flex items-center gap-2"
         >
-          📍 Cadastro de Endereços
-        </router-link>
+          📍
+          <span v-if="!isCollapsed">Cadastro de Endereços</span>
+        </div>
       </nav>
     </aside>
-
     <!-- MAIN -->
     <div class="flex-1 flex flex-col">
       <!-- NAVBAR -->
