@@ -41,9 +41,14 @@ async function login() {
       <div class="text-center text-white">
         <h1 class="text-3xl lg:text-4xl font-bold mb-4">Bem-vindo 👋</h1>
         <p class="text-base lg:text-lg opacity-90">
-          Sistema de gerenciamento de usuários com Vue.js, Tailwind CSS e PHP
-          Laravel. Faça login para acessar a dashboard e gerenciar seus usuários
-          de forma fácil e eficiente!
+          Sistema de gerenciamento de usuários desenvolvido como parte de um
+          desafio técnico para vaga na Seab. Construído com Vue.js, Tailwind CSS
+          e PHP Laravel, o projeto demonstra habilidades em desenvolvimento full
+          stack, organização de código e construção de interfaces modernas. A
+          aplicação permite login seguro e acesso a uma dashboard intuitiva,
+          onde é possível criar, editar, visualizar e gerenciar usuários de
+          forma rápida, simples e eficiente, com foco em usabilidade e
+          performance.
         </p>
       </div>
     </div>
@@ -56,7 +61,7 @@ async function login() {
         <h2
           class="text-2xl lg:text-3xl font-bold mb-6 text-gray-800 text-center"
         >
-          Login
+          Faça login na sua conta
         </h2>
 
         <div class="space-y-4">
@@ -83,6 +88,20 @@ async function login() {
             <span v-if="loading">Entrando...</span>
             <span v-else>Entrar</span>
           </button>
+
+          <div class="mt-4 p-4 rounded-xl border bg-gray-50 text-center">
+            <p class="text-sm text-gray-500 mb-2">Usuário e senha para teste</p>
+
+            <div class="space-y-1">
+              <div class="text-base font-semibold text-gray-700">
+                admin@teste.com
+              </div>
+
+              <div class="text-base text-gray-600">
+                Senha: <span class="font-medium text-gray-800">senha123</span>
+              </div>
+            </div>
+          </div>
 
           <p v-if="error" class="text-red-500 text-sm text-center">
             {{ error }}
