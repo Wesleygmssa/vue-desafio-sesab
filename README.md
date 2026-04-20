@@ -62,6 +62,15 @@ Este projeto foi desenvolvido como parte de um desafio técnico proposto pela
 npm install
 ```
 
+### 👤 Usuário administrador padrão
+
+Após a inicialização do backend, utilize as seguintes credenciais para acessar a aplicação como administrador:
+
+```
+Login: admin@teste.com
+Senha: senha123
+```
+
 ### Rodar a aplicação
 
 ```bash
@@ -69,7 +78,6 @@ npm run dev
 ```
 
 ````
-
 ## 📁 Estrutura do Projeto
 
 ```src/
