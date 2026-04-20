@@ -84,7 +84,18 @@ async function atualizar() {
     }, 800);
   } catch (error) {
     console.error(error);
-    showToast('Erro ao atualizar usuário', 'error');
+
+    let message = 'Erro ao cadastrar usuário';
+
+    if (error.response?.data?.message) {
+      message = error.response.data.message;
+    } else if (error.response?.data?.errors) {
+      // pega o primeiro erro do objeto
+      const errors = error.response.data.errors;
+      message = Object.values(errors)[0][0];
+    }
+
+    showToast(message, 'error');
   }
 }
 </script>
