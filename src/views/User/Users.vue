@@ -187,14 +187,14 @@ function limparFiltros() {
         <div class="flex flex-col sm:flex-row gap-2 sm:items-end">
           <button
             @click="buscarUsers(1)"
-            class="flex-1 py-2.5 rounded-xl text-white bg-blue-600 hover:bg-blue-700 transition"
+            class="cursor-pointer flex-1 py-2.5 rounded-xl text-white bg-blue-600 hover:bg-blue-700 transition"
           >
             Filtrar
           </button>
 
           <button
             @click="limparFiltros"
-            class="px-4 py-2.5 rounded-xl border hover:bg-gray-100 transition"
+            class="cursor-pointer px-4 py-2.5 rounded-xl border hover:bg-gray-100 transition"
           >
             Limpar
           </button>

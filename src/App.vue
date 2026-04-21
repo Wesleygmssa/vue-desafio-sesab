@@ -120,7 +120,7 @@ async function logout() {
         <div class="flex items-center gap-2">
           <!-- mobile menu button -->
           <button
-            class="lg:hidden p-2 rounded-lg hover:bg-white/10"
+            class="cursor-pointer lg:hidden p-2 rounded-lg hover:bg-white/10"
             @click="toggleMobileMenu"
           >
             ☰
@@ -128,7 +128,7 @@ async function logout() {
 
           <!-- desktop collapse -->
           <button
-            class="hidden lg:block p-2 rounded-lg hover:bg-white/10"
+            class="cursor-pointer hidden lg:block p-2 rounded-lg hover:bg-white/10"
             @click="toggleSidebar"
           >
             <svg
