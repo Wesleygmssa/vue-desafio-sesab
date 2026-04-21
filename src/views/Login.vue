@@ -89,6 +89,10 @@ async function login() {
             <span v-else>Entrar</span>
           </button>
 
+          <p v-if="error" class="text-red-500 text-sm text-center">
+            {{ error }}
+          </p>
+
           <div class="mt-4 p-4 rounded-xl border bg-gray-50 text-center">
             <p class="text-sm text-gray-500 mb-2">Usuário e senha para teste</p>
 
@@ -103,10 +107,6 @@ async function login() {
               </div>
             </div>
           </div>
-
-          <p v-if="error" class="text-red-500 text-sm text-center">
-            {{ error }}
-          </p>
         </div>
       </div>
     </div>
