@@ -21,6 +21,10 @@ Este projeto foi desenvolvido como parte de um desafio técnico proposto pela
 
 ## Demonstração do Projeto
 
+### Visão geral
+
+![Tela inicial](./screenshots/sistema.gif)
+
 ### Tela inicial
 
 ![Tela inicial](./screenshots/login.png)

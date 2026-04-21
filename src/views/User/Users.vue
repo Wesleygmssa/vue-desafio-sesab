@@ -319,29 +319,34 @@ const isSelf = (user) => user.id === currentUser.value.id;
             <td class="p-4">{{ formatDate(user.updated_at) }}</td>
 
             <td class="p-4">
-              <div class="flex justify-end gap-2">
-                <BaseButton
-                  label="Detalhes"
-                  color="gray"
-                  size="sm"
+              <div
+                class="flex justify-end items-center gap-2 opacity-80 hover:opacity-100 transition"
+              >
+                <button
+                  class="cursor-pointer p-2 rounded-lg hover:bg-gray-100 transition"
                   @click="detalhes(user)"
-                />
+                  title="Detalhes"
+                >
+                  🔍
+                </button>
 
-                <BaseButton
-                  label="Editar"
-                  color="blue"
-                  size="sm"
+                <button
+                  class="cursor-pointer p-2 rounded-lg hover:bg-blue-50 text-blue-600 transition disabled:opacity-40 disabled:cursor-not-allowed"
                   @click="editar(user)"
                   :disabled="isSelf(user)"
-                />
+                  title="Editar"
+                >
+                  ✏️
+                </button>
 
-                <BaseButton
-                  label="Excluir"
-                  color="red"
-                  size="sm"
+                <button
+                  class="cursor-pointer p-2 rounded-lg hover:bg-red-50 text-red-600 transition disabled:opacity-40 disabled:cursor-not-allowed"
                   @click="openConfirm(user)"
                   :disabled="isSelf(user)"
-                />
+                  title="Excluir"
+                >
+                  🗑️
+                </button>
               </div>
             </td>
           </tr>
