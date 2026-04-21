@@ -38,7 +38,7 @@ defineEmits(['close', 'confirm']);
 <template>
   <div
     v-if="show"
-    class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+    class="fixed inset-0 /*bg-black/50*/ flex items-center justify-center z-50"
   >
     <div class="bg-white rounded-2xl p-6 w-[90%] max-w-md shadow-xl">
       <h2 class="text-lg font-bold mb-3">
