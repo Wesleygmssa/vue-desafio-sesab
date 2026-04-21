@@ -2,9 +2,17 @@
 FROM node:20 AS build
 
 WORKDIR /app
+
 COPY package*.json ./
 RUN npm install
+
 COPY . .
+
+#  RECEBE VARIÁVEL DO DOCKER
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
+
+#  BUILD USA A VARIÁVEL
 RUN npm run build
 
 # Etapa 2: servir com nginx

@@ -2,7 +2,10 @@ version: '3.8'
 
 services:
   vue-app:
-    build: .
+    build:
+      context: .
+      args:
+        VITE_API_URL: https://seu-backend.railway.app/api
     ports:
       - '8080:80'
     restart: always
