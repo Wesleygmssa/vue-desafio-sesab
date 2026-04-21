@@ -158,43 +158,73 @@ function limparFiltros() {
     </div>
 
     <!-- FILTROS -->
+    <!-- FILTROS -->
     <div class="bg-white p-6 rounded-2xl shadow-sm mb-6 border border-gray-100">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-        <input
-          v-model="nome"
-          placeholder="Nome"
-          class="px-4 py-2.5 rounded-xl border bg-gray-50 focus:bg-white focus:border-blue-600 outline-none transition"
-        />
+      <!-- HEADER (opcional, dá cara de painel) -->
+      <div class="mb-4">
+        <h3 class="text-sm font-semibold text-gray-700">Filtros de busca</h3>
+        <p class="text-xs text-gray-400">
+          Use os filtros abaixo para refinar os resultados
+        </p>
+      </div>
 
-        <input
-          v-model="cpf"
-          placeholder="CPF"
-          class="px-4 py-2.5 rounded-xl border bg-gray-50 focus:bg-white focus:border-blue-600 outline-none transition"
-        />
+      <!-- GRID -->
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <!-- NOME -->
+        <div class="flex flex-col">
+          <label class="text-xs font-medium text-gray-500 mb-1">Nome</label>
+          <input
+            v-model="nome"
+            placeholder="Buscar por nome"
+            class="px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:border-[#3448EB] focus:ring-2 focus:ring-[#3448EB]/10 outline-none transition"
+          />
+        </div>
 
-        <input
-          type="date"
-          v-model="dataInicio"
-          class="px-4 py-2.5 rounded-xl border bg-gray-50"
-        />
+        <!-- CPF -->
+        <div class="flex flex-col">
+          <label class="text-xs font-medium text-gray-500 mb-1">CPF</label>
+          <input
+            v-model="cpf"
+            @input="cpf = formatCPF($event.target.value)"
+            placeholder="000.000.000-00"
+            class="px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:border-[#3448EB] focus:ring-2 focus:ring-[#3448EB]/10 outline-none transition"
+          />
+        </div>
 
-        <input
-          type="date"
-          v-model="dataFim"
-          class="px-4 py-2.5 rounded-xl border bg-gray-50"
-        />
+        <!-- DATA INÍCIO -->
+        <div class="flex flex-col">
+          <label class="text-xs font-medium text-gray-500 mb-1"
+            >Data início</label
+          >
+          <input
+            type="date"
+            v-model="dataInicio"
+            class="px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:border-[#3448EB] focus:ring-2 focus:ring-[#3448EB]/10 outline-none transition"
+          />
+        </div>
 
-        <div class="flex flex-col sm:flex-row gap-2 sm:items-end">
+        <!-- DATA FIM -->
+        <div class="flex flex-col">
+          <label class="text-xs font-medium text-gray-500 mb-1">Data fim</label>
+          <input
+            type="date"
+            v-model="dataFim"
+            class="px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:border-[#3448EB] focus:ring-2 focus:ring-[#3448EB]/10 outline-none transition"
+          />
+        </div>
+
+        <!-- AÇÕES -->
+        <div class="flex items-end gap-2">
           <button
             @click="buscarUsers(1)"
-            class="cursor-pointer flex-1 py-2.5 rounded-xl text-white bg-blue-600 hover:bg-blue-700 transition"
+            class="cursor-pointer flex-1 py-2.5 rounded-xl text-white font-medium bg-[#3448EB] hover:bg-[#2f3ed6] active:scale-[0.98] transition-all shadow-sm"
           >
             Filtrar
           </button>
 
           <button
             @click="limparFiltros"
-            class="cursor-pointer px-4 py-2.5 rounded-xl border hover:bg-gray-100 transition"
+            class="cursor-pointer px-4 py-2.5 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-100 active:scale-[0.98] transition"
           >
             Limpar
           </button>
@@ -268,6 +298,12 @@ function limparFiltros() {
                   🗑️
                 </button>
               </div>
+            </td>
+          </tr>
+
+          <tr v-if="!loading && users.length === 0">
+            <td colspan="7" class="text-center py-10 text-gray-400">
+              Nenhum usuário encontrado
             </td>
           </tr>
         </tbody>
