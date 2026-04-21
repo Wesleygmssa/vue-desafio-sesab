@@ -1,23 +1,17 @@
-# 🚀 Vue Project
+## 🏥 Sobre o desafio
 
-Projeto desenvolvido com **Vue 3 + Vite**, como parte do **Desafio da SESAB (Secretaria da Saúde do Estado da Bahia)**, com foco em boas práticas de desenvolvimento frontend, organização de código e consumo de API.
+Este projeto foi desenvolvido para o desafio técnico proposto pela **SESAB (Secretaria da Saúde do Estado da Bahia)**, com o objetivo de avaliar habilidades em:
 
----
+## Objetivo do desafio
 
-## 🏥 Desafio da SESAB
+Desenvolver uma aplicação frontend moderna com Vue 3, capaz de consumir e manipular dados de uma API, com foco em boas práticas de arquitetura e experiência do usuário.
 
-Este projeto foi desenvolvido como parte de um desafio técnico proposto pela
+O sistema inclui:
 
-**SESAB (Secretaria da Saúde do Estado da Bahia)**.
-
-### 🎯 Objetivo do desafio
-
-- Criar uma aplicação frontend moderna com Vue 3
-- Consumir e manipular dados de uma API
-- Implementar telas de listagem, visualização e gerenciamento de usuários
-- Aplicar boas práticas de componentização e organização de código
-
----
+- Listagem de usuários
+- Visualização de detalhes
+- Cadastro, edição e remoção
+- Estrutura modular e reutilizável de componentes
 
 ## Demonstração do Projeto
 
