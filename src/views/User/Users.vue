@@ -5,6 +5,7 @@ import { formatCPF, formatDate } from '@/utils/formatters';
 import { api } from '@/services/api';
 import Toast from '@/components/Toast.vue';
 import ConfirmModal from '@/components/ConfirmModal.vue';
+import LoadingOverlay from '@/components/LoadingOverlay.vue';
 
 const router = useRouter();
 
@@ -223,78 +224,90 @@ function limparFiltros() {
     </div>
 
     <!-- TABLE DESKTOP -->
-    <div class="hidden md:block bg-white rounded-2xl overflow-hidden shadow-sm">
-      <table class="w-full text-sm">
-        <thead class="bg-purple-50">
-          <tr>
-            <th class="p-4 text-left">Nome</th>
-            <th class="p-4 text-left">CPF</th>
-            <th class="p-4 text-left">Email</th>
-            <th class="p-4 text-left">Perfil</th>
-            <th class="p-4 text-left">Criado</th>
-            <th class="p-4 text-left">Atualizado</th>
-            <th class="p-4 text-center">Ações</th>
-          </tr>
-        </thead>
 
-        <tbody>
-          <tr v-if="loading">
-            <td colspan="7" class="text-center py-10 text-gray-400">
-              Carregando...
-            </td>
-          </tr>
+    <div class="hidden md:block">
+      <div class="relative bg-white rounded-2xl overflow-hidden shadow-sm">
+        <LoadingOverlay :show="loading" />
 
-          <tr
-            v-for="user in users"
-            :key="user.id"
-            class="border-t hover:bg-gray-50"
+        <table class="w-full text-sm">
+          <thead class="bg-purple-50">
+            <tr>
+              <th class="p-4 text-left">Nome</th>
+              <th class="p-4 text-left">CPF</th>
+              <th class="p-4 text-left">Email</th>
+              <th class="p-4 text-left">Perfil</th>
+              <th class="p-4 text-left">Criado</th>
+              <th class="p-4 text-left">Atualizado</th>
+              <th class="p-4 text-center">Ações</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <!-- <div
+            v-if="loading"
+            class="absolute inset-0 bg-white/20 backdrop-blur-sm flex items-center justify-center z-10"
           >
-            <td class="p-4">{{ user.nome }}</td>
-            <td class="p-4">{{ formatCPF(user.cpf) }}</td>
-            <td class="p-4">{{ user.email }}</td>
-            <td class="p-4">{{ user.profile?.nome }}</td>
-            <td class="p-4">{{ formatDate(user.created_at) }}</td>
-            <td class="p-4">{{ formatDate(user.updated_at) }}</td>
+            <div class="flex items-center gap-3">
+              <div
+                class="w-5 h-5 border-2 border-purple-600 border-t-transparent rounded-full animate-spin"
+              ></div>
+              <span class="text-gray-600 font-medium">Loading...</span>
+            </div>
+          </div> -->
 
-            <td class="p-4">
-              <div class="flex justify-end gap-2">
-                <button
-                  class="text-purple-600 disabled:opacity-30 cursor-pointer"
-                  @click="detalhes(user)"
-                >
-                  🔍
-                </button>
+            <tr
+              v-for="user in users"
+              :key="user.id"
+              class="border-t hover:bg-gray-50"
+            >
+              <td class="p-4">{{ user.nome }}</td>
+              <td class="p-4">{{ formatCPF(user.cpf) }}</td>
+              <td class="p-4">{{ user.email }}</td>
+              <td class="p-4">{{ user.profile?.nome }}</td>
+              <td class="p-4">{{ formatDate(user.created_at) }}</td>
+              <td class="p-4">{{ formatDate(user.updated_at) }}</td>
 
-                <button
-                  :disabled="!canEdit(user)"
-                  @click="editar(user)"
-                  class="text-purple-600 disabled:opacity-30 cursor-pointer"
-                >
-                  ✏️
-                </button>
+              <td class="p-4">
+                <div class="flex justify-end gap-2">
+                  <button
+                    class="text-purple-600 disabled:opacity-30 cursor-pointer"
+                    @click="detalhes(user)"
+                  >
+                    🔍
+                  </button>
 
-                <button
-                  :disabled="!canDelete(user)"
-                  @click="openConfirm(user)"
-                  class="text-red-500 disabled:opacity-30 cursor-pointer"
-                >
-                  🗑️
-                </button>
-              </div>
-            </td>
-          </tr>
+                  <button
+                    :disabled="!canEdit(user)"
+                    @click="editar(user)"
+                    class="text-purple-600 disabled:opacity-30 cursor-pointer"
+                  >
+                    ✏️
+                  </button>
 
-          <tr v-if="!loading && users.length === 0">
-            <td colspan="7" class="text-center py-10 text-gray-400">
-              Nenhum usuário encontrado
-            </td>
-          </tr>
-        </tbody>
-      </table>
+                  <button
+                    :disabled="!canDelete(user)"
+                    @click="openConfirm(user)"
+                    class="text-red-500 disabled:opacity-30 cursor-pointer"
+                  >
+                    🗑️
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <tr v-if="!loading && users.length === 0">
+              <td colspan="7" class="text-center py-10 text-gray-400">
+                Nenhum usuário encontrado
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- MOBILE -->
     <div class="md:hidden space-y-3 mt-4">
+      <LoadingOverlay :show="loading" />
       <div
         v-for="user in users"
         :key="user.id"

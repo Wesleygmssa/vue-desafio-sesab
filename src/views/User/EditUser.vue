@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { formatCPF } from '@/utils/formatters';
 import { api } from '@/services/api';
 import Toast from '@/components/Toast.vue';
+import LoadingOverlay from '@/components/LoadingOverlay.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -116,7 +117,9 @@ async function atualizar() {
         <h1 class="text-2xl font-bold text-gray-800">Editar Usuário</h1>
       </div>
 
-      <div v-if="loading" class="text-gray-400">Carregando...</div>
+      <div v-if="loading" class="text-gray-400">
+        <LoadingOverlay :show="loading" />...
+      </div>
 
       <form
         v-else
