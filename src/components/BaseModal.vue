@@ -21,7 +21,7 @@ defineEmits(['close']);
 
         <button
           @click="$emit('close')"
-          class="cursor-pointertext-gray-500 hover:text-black text-xl"
+          class="cursor-pointer text-gray-500 hover:text-black text-xl"
         >
           ✕
         </button>
