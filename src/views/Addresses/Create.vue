@@ -124,7 +124,7 @@ onMounted(() => {
 
     <div class="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
       <!-- HEADER -->
-      <h1 class="text-2xl font-bold text-gray-800 mb-8">Endereços</h1>
+      <h1 class="text-2xl font-bold text-gray-800 mb-8">Gerenciar Endereços</h1>
 
       <!-- LOADING -->
       <LoadingOverlay v-if="loading" :show="loading" />
