@@ -130,7 +130,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="max-w-6xl mx-auto px-4 min-h-screen py-10">
+  <div class="max-w-8xl mx-auto px-4 min-h-screen py-10">
     <!-- TOAST -->
     <Toast
       :show="toast.show"
