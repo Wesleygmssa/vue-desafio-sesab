@@ -9,9 +9,11 @@ O sistema inclui:
 - Cadastro, edição e remoção
 - Estrutura modular e reutilizável de componentes
 
-## Demonstração do Projeto
+#### A aplicação em produção pode ser acessada através do link:
 
-A aplicação em produção pode ser acessada através do link: [https://vue-desafio-sesab.netlify.app](https://vue-desafio-sesab.netlify.app)
+[https://vue-desafio-sesab.netlify.app](https://vue-desafio-sesab.netlify.app)
+
+## Demonstração do Projeto
 
 ### Visão geral
 
