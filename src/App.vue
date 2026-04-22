@@ -154,7 +154,7 @@ onUnmounted(() => {
 
         <!-- botão collapse desktop -->
         <button
-          class="hidden lg:block p-2 rounded-lg hover:bg-white/10"
+          class="cursor-pointer hidden lg:block p-2 rounded-lg hover:bg-white/10"
           @click="toggleSidebar"
         >
           <svg
