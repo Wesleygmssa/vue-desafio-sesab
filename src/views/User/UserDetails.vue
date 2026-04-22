@@ -3,29 +3,47 @@ import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { formatCPF, formatDate } from '@/utils/formatters';
 import { api } from '@/services/api';
+import LoadingOverlay from '@/components/LoadingOverlay.vue';
 
 const route = useRoute();
 const router = useRouter();
 const user = ref(null);
+const loading = ref(true);
 
 // Buscar usuário
 onMounted(async () => {
-  const response = await api.get(`/users/${route.params.id}`);
-  user.value = response.data;
+  try {
+    loading.value = true;
+
+    const response = await api.get(`/users/${route.params.id}`);
+    user.value = response.data;
+  } catch (e) {
+    console.error(e);
+  } finally {
+    loading.value = false;
+  }
 });
 </script>
 
 <template>
-  <div class="max-w-8xl mx-auto mt-0 px-4 min-h-screen py-5" v-if="user">
+  <div class="max-w-8xl mx-auto mt-0 px-4 min-h-screen py-5">
     <!-- CARD -->
-    <div class="bg-white rounded-2xl shadow-sm p-6 min-h-[75vh] flex flex-col">
+    <div
+      class="relative bg-white rounded-2xl shadow-sm p-6 min-h-[75vh] flex flex-col"
+    >
+      <LoadingOverlay :show="loading" />
+
       <!-- HEADER -->
       <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-800">Detalhes do Usuário</h1>
       </div>
 
       <!-- CONTEÚDO -->
-      <div class="space-y-6 flex-1">
+      <div
+        class="space-y-6 flex-1"
+        :class="{ 'opacity-50 pointer-events-none': loading }"
+        v-if="user"
+      >
         <!-- GRID -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="p-4 bg-gray-50 rounded-xl">
