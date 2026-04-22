@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { api } from '@/services/api';
 
@@ -17,7 +17,7 @@ const isMobileOpen = ref(false);
 
 /* TIMER AUTO LOGOUT */
 let inactivityTimer = null;
-const INACTIVITY_TIME = 10 * 60 * 1000; // 10 minutos
+const INACTIVITY_TIME = 10 * 60 * 1000;
 
 /* USER */
 function loadUser() {
@@ -82,16 +82,24 @@ function removeActivityListeners() {
 function checkScreenSize() {
   const width = window.innerWidth;
 
-  if (width < 768) {
-    isMobileOpen.value = false;
-  } else if (width < 1024) {
-    isMobileOpen.value = false;
-    isCollapsed.value = true;
-  } else {
-    isMobileOpen.value = false;
+  if (width < 1024) {
     isCollapsed.value = false;
   }
+
+  if (width < 768) {
+    isMobileOpen.value = false;
+  }
 }
+
+/* fechar menu ao trocar rota no mobile */
+watch(
+  () => route.path,
+  () => {
+    if (window.innerWidth < 768) {
+      isMobileOpen.value = false;
+    }
+  }
+);
 
 /* LIFECYCLE */
 onMounted(() => {
@@ -102,7 +110,6 @@ onMounted(() => {
 
   checkScreenSize();
 
-  // 🔥 AUTO LOGOUT START
   setupActivityListeners();
   resetInactivityTimer();
 });
@@ -122,7 +129,7 @@ onUnmounted(() => {
     <!-- OVERLAY MOBILE -->
     <div
       v-if="isMobileOpen"
-      class="fixed inset-0 bg-black/40 z-40 lg:hidden"
+      class="fixed inset-0 bg-black/50 z-40 lg:hidden"
       @click="closeMobileMenu"
     ></div>
 
@@ -135,41 +142,33 @@ onUnmounted(() => {
 
         isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
 
-        isCollapsed ? 'w-20' : 'w-64',
+        isCollapsed ? 'lg:w-20' : 'lg:w-64',
       ]"
       style="background: linear-gradient(to bottom, #7c3aed, #5b21b6)"
     >
-      <!-- HEADER -->
+      <!-- HEADER SIDEBAR -->
       <div class="flex items-center justify-between px-4 mb-8">
         <h2 v-if="!isCollapsed" class="text-lg font-semibold tracking-wide">
           SESAB
         </h2>
 
-        <div class="flex items-center gap-2">
-          <button
-            class="cursor-pointer lg:hidden p-2 rounded-lg hover:bg-white/10"
-            @click="toggleMobileMenu"
+        <!-- botão collapse desktop -->
+        <button
+          class="hidden lg:block p-2 rounded-lg hover:bg-white/10"
+          @click="toggleSidebar"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-5 h-5 transition-transform duration-300"
+            :class="isCollapsed ? 'rotate-180' : ''"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
           >
-            ☰
-          </button>
-
-          <button
-            class="cursor-pointer hidden lg:block p-2 rounded-lg hover:bg-white/10"
-            @click="toggleSidebar"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="w-5 h-5 transition-transform duration-300"
-              :class="isCollapsed ? 'rotate-180' : ''"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <polyline points="15 18 9 12 15 6" />
-            </svg>
-          </button>
-        </div>
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
+        </button>
       </div>
 
       <!-- NAV -->
@@ -177,15 +176,11 @@ onUnmounted(() => {
         <router-link
           to="/users"
           @click="closeMobileMenu"
-          class="group flex items-center gap-3 px-3 py-2 rounded-lg transition relative"
+          class="flex items-center gap-3 px-3 py-2 rounded-lg transition relative"
           :class="route.path === '/users' ? 'bg-white/15' : 'hover:bg-white/10'"
         >
-          <div class="text-lg">👥</div>
-
-          <span v-if="!isCollapsed" class="text-sm font-medium">
-            Usuários
-          </span>
-
+          👥
+          <span v-if="!isCollapsed" class="text-sm font-medium">Usuários</span>
           <span
             v-if="route.path === '/users'"
             class="absolute left-0 top-1 bottom-1 w-1 bg-white rounded-r-full"
@@ -200,10 +195,8 @@ onUnmounted(() => {
             route.path === '/profiles' ? 'bg-white/15' : 'hover:bg-white/10'
           "
         >
-          <div class="text-lg">👤</div>
-
-          <span v-if="!isCollapsed" class="text-sm font-medium"> Perfis </span>
-
+          👤
+          <span v-if="!isCollapsed" class="text-sm font-medium">Perfis</span>
           <span
             v-if="route.path === '/profiles'"
             class="absolute left-0 top-1 bottom-1 w-1 bg-white rounded-r-full"
@@ -220,12 +213,8 @@ onUnmounted(() => {
               : 'hover:bg-white/10'
           "
         >
-          <div class="text-lg">📍</div>
-
-          <span v-if="!isCollapsed" class="text-sm font-medium">
-            Endereços
-          </span>
-
+          📍
+          <span v-if="!isCollapsed" class="text-sm font-medium">Endereços</span>
           <span
             v-if="route.path === '/addresses/create'"
             class="absolute left-0 top-1 bottom-1 w-1 bg-white rounded-r-full"
@@ -236,35 +225,43 @@ onUnmounted(() => {
 
     <!-- MAIN -->
     <div class="flex-1 flex flex-col lg:ml-0">
-      <!-- NAVBAR -->
+      <!-- HEADER -->
       <nav
         v-if="route.path !== '/login'"
         class="text-white px-4 lg:px-6 py-3 flex justify-between items-center shadow-md"
         style="background: linear-gradient(to right, #7c3aed, #5b21b6)"
       >
-        <span class="font-semibold"></span>
-
-        <div class="flex items-center gap-4">
+        <!-- LEFT -->
+        <div class="flex items-center gap-2">
+          <!-- BOTÃO MOBILE MENU -->
           <button
-            @click="logout"
-            class="flex items-center gap-2 cursor-pointer bg-white/20 hover:bg-white/30 active:scale-95 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
+            class="lg:hidden p-2 rounded-lg hover:bg-white/20 active:scale-95 transition"
+            @click="toggleMobileMenu"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="w-4 h-4"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-              <polyline points="16 17 21 12 16 7" />
-              <line x1="21" y1="12" x2="9" y2="12" />
-            </svg>
-
-            <span>Sair</span>
+            ☰
           </button>
         </div>
+
+        <!-- RIGHT -->
+        <button
+          @click="logout"
+          class="flex items-center gap-2 bg-white/20 hover:bg-white/30 active:scale-95 px-4 py-2 rounded-lg text-sm font-medium transition"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-4 h-4"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+
+          <span>Sair</span>
+        </button>
       </nav>
 
       <!-- CONTENT -->
