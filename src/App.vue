@@ -235,7 +235,7 @@ onUnmounted(() => {
         <div class="flex items-center gap-2">
           <!-- BOTÃO MOBILE MENU -->
           <button
-            class="lg:hidden p-2 rounded-lg hover:bg-white/20 active:scale-95 transition"
+            class="cursor-pointer lg:hidden p-2 rounded-lg hover:bg-white/20 active:scale-95 transition"
             @click="toggleMobileMenu"
           >
             ☰
@@ -245,7 +245,7 @@ onUnmounted(() => {
         <!-- RIGHT -->
         <button
           @click="logout"
-          class="flex items-center gap-2 bg-white/20 hover:bg-white/30 active:scale-95 px-4 py-2 rounded-lg text-sm font-medium transition"
+          class="cursor-pointer flex items-center gap-2 bg-white/20 hover:bg-white/30 active:scale-95 px-4 py-2 rounded-lg text-sm font-medium transition"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
