@@ -13,13 +13,14 @@ const user = ref({
   email: '',
   profile_id: '',
   addresses: [],
+  // password: '', // opcional (se for usar depois)
 });
 
 const perfis = ref([]);
 const enderecos = ref([]);
 const loading = ref(true);
 
-//  TOAST
+/* TOAST */
 const toast = ref({
   show: false,
   message: '',
@@ -34,7 +35,7 @@ function showToast(message, type = 'success') {
   }, 3000);
 }
 
-//  CARREGAR APENAS LISTAS (SEM USER)
+/* CARREGAR LISTAS */
 onMounted(async () => {
   try {
     const [resPerfis, resEnderecos] = await Promise.all([
@@ -52,7 +53,7 @@ onMounted(async () => {
   }
 });
 
-//  CADASTRAR
+/* CADASTRAR */
 async function cadastrar() {
   try {
     const data = {
@@ -75,7 +76,6 @@ async function cadastrar() {
     if (error.response?.data?.message) {
       message = error.response.data.message;
     } else if (error.response?.data?.errors) {
-      // pega o primeiro erro do objeto
       const errors = error.response.data.errors;
       message = Object.values(errors)[0][0];
     }
@@ -110,7 +110,6 @@ async function cadastrar() {
         @submit.prevent="cadastrar"
         class="space-y-6 flex-1 flex flex-col"
       >
-        <!-- CONTEÚDO -->
         <div class="space-y-6">
           <!-- GRID -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -121,7 +120,7 @@ async function cadastrar() {
                 v-model="user.nome"
                 required
                 placeholder="Digite o nome"
-                class="w-full mt-1 px-4 py-2 rounded-xl border bg-gray-50 focus:bg-white focus:outline-none focus:border-[#3448EB] transition"
+                class="w-full mt-1 px-4 py-2 rounded-xl border bg-gray-50 focus:bg-white focus:outline-none focus:border-purple-600 transition"
               />
             </div>
 
@@ -134,7 +133,7 @@ async function cadastrar() {
                 maxlength="14"
                 required
                 placeholder="000.000.000-00"
-                class="w-full mt-1 px-4 py-2 rounded-xl border bg-gray-50 focus:bg-white focus:outline-none focus:border-[#3448EB] transition"
+                class="w-full mt-1 px-4 py-2 rounded-xl border bg-gray-50 focus:bg-white focus:outline-none focus:border-purple-600 transition"
               />
             </div>
 
@@ -146,9 +145,22 @@ async function cadastrar() {
                 type="email"
                 required
                 placeholder="email@email.com"
-                class="w-full mt-1 px-4 py-2 rounded-xl border bg-gray-50 focus:bg-white focus:outline-none focus:border-[#3448EB] transition"
+                class="w-full mt-1 px-4 py-2 rounded-xl border bg-gray-50 focus:bg-white focus:outline-none focus:border-purple-600 transition"
               />
             </div>
+
+            <!-- SENHA OPCIONAL (se quiser ativar depois) -->
+            <!--
+            <div>
+              <label class="text-xs text-gray-500">Senha (opcional)</label>
+              <input
+                v-model="user.password"
+                type="password"
+                placeholder="Digite uma senha"
+                class="w-full mt-1 px-4 py-2 rounded-xl border bg-gray-50 focus:bg-white focus:outline-none focus:border-purple-600 transition"
+              />
+            </div>
+            -->
 
             <!-- PERFIL -->
             <div>
@@ -156,7 +168,7 @@ async function cadastrar() {
               <select
                 v-model="user.profile_id"
                 required
-                class="w-full mt-1 px-4 py-2 rounded-xl border bg-gray-50 focus:bg-white focus:outline-none focus:border-[#3448EB] transition"
+                class="w-full mt-1 px-4 py-2 rounded-xl border bg-gray-50 focus:bg-white focus:outline-none focus:border-purple-600 transition"
               >
                 <option value="">Selecione</option>
                 <option v-for="p in perfis" :key="p.id" :value="p.id">
@@ -183,7 +195,7 @@ async function cadastrar() {
                   :value="e.id"
                   v-model="user.addresses"
                   class="w-4 h-4"
-                  style="accent-color: #3448eb"
+                  style="accent-color: #9333ea"
                 />
 
                 <span class="text-sm text-gray-700">
@@ -199,7 +211,7 @@ async function cadastrar() {
           </div>
         </div>
 
-        <!-- BOTÕES FIXOS NO FINAL -->
+        <!-- BOTÕES -->
         <div class="flex justify-end gap-3 pt-4 mt-auto">
           <button
             type="button"
@@ -211,8 +223,7 @@ async function cadastrar() {
 
           <button
             type="submit"
-            class="cursor-pointer px-5 py-2 rounded-xl text-white font-medium transition hover:scale-[1.02] active:scale-[0.98] shadow-sm"
-            style="background: #3448eb"
+            class="cursor-pointer px-5 py-2 rounded-xl text-white font-medium transition hover:scale-[1.02] active:scale-[0.98] shadow-sm bg-purple-600 hover:bg-purple-700"
           >
             Cadastrar
           </button>

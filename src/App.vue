@@ -7,14 +7,11 @@ function checkScreenSize() {
   const width = window.innerWidth;
 
   if (width < 768) {
-    // MOBILE → drawer
     isMobileOpen.value = false;
   } else if (width < 1024) {
-    // TABLET → fixo colapsado
     isMobileOpen.value = false;
     isCollapsed.value = true;
   } else {
-    // DESKTOP → fixo aberto
     isMobileOpen.value = false;
     isCollapsed.value = false;
   }
@@ -103,13 +100,11 @@ async function logout() {
         'text-white flex flex-col py-5 transition-all duration-300 border-r border-white/10 z-50',
         'fixed lg:static top-0 left-0 h-full',
 
-        // mobile drawer
         isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
 
-        // tablet + desktop width (NUNCA some)
         isCollapsed ? 'w-20' : 'w-64',
       ]"
-      style="background: linear-gradient(to bottom, #3448eb, #1f2fd6)"
+      style="background: linear-gradient(to bottom, #7c3aed, #5b21b6)"
     >
       <!-- HEADER -->
       <div class="flex items-center justify-between px-4 mb-8">
@@ -118,7 +113,6 @@ async function logout() {
         </h2>
 
         <div class="flex items-center gap-2">
-          <!-- mobile menu button -->
           <button
             class="cursor-pointer lg:hidden p-2 rounded-lg hover:bg-white/10"
             @click="toggleMobileMenu"
@@ -126,7 +120,6 @@ async function logout() {
             ☰
           </button>
 
-          <!-- desktop collapse -->
           <button
             class="cursor-pointer hidden lg:block p-2 rounded-lg hover:bg-white/10"
             @click="toggleSidebar"
@@ -148,7 +141,6 @@ async function logout() {
 
       <!-- NAV -->
       <nav class="flex flex-col gap-1 px-2">
-        <!-- USERS -->
         <router-link
           to="/users"
           @click="closeMobileMenu"
@@ -167,7 +159,6 @@ async function logout() {
           ></span>
         </router-link>
 
-        <!-- PERFIL -->
         <div
           class="flex items-center gap-3 px-3 py-2 rounded-lg opacity-40 cursor-not-allowed"
         >
@@ -175,7 +166,6 @@ async function logout() {
           <span v-if="!isCollapsed" class="text-sm">Perfis</span>
         </div>
 
-        <!-- ENDEREÇOS -->
         <div
           class="flex items-center gap-3 px-3 py-2 rounded-lg opacity-40 cursor-not-allowed"
         >
@@ -191,7 +181,7 @@ async function logout() {
       <nav
         v-if="route.path !== '/login'"
         class="text-white px-4 lg:px-6 py-3 flex justify-between items-center shadow-md"
-        style="background: linear-gradient(to right, #3448eb, #1f2fd6)"
+        style="background: linear-gradient(to right, #7c3aed, #5b21b6)"
       >
         <span class="font-semibold"></span>
 

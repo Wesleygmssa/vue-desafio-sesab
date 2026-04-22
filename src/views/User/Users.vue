@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { formatCPF, formatDate } from '@/utils/formatters';
 import { api } from '@/services/api';
@@ -42,8 +42,11 @@ const currentUser = ref({
 });
 
 /* REGRAS */
+const isAdmin = computed(() => currentUser.value.role === 'admin');
 const isSelf = (user) => user.id === currentUser.value.id;
-const isAdmin = (user) => user.profile?.nome?.toLowerCase() === 'admin';
+
+const canEdit = (user) => isAdmin.value && !isSelf(user);
+const canDelete = (user) => isAdmin.value && !isSelf(user);
 
 /* BUSCAR */
 async function buscarUsers(p = 1) {
@@ -94,6 +97,7 @@ async function deleteUser() {
 
 /* AÇÕES */
 function editar(user) {
+  if (!canEdit(user)) return;
   router.push(`/users/${user.id}/edit`);
 }
 
@@ -138,19 +142,19 @@ function limparFiltros() {
     </div>
 
     <!-- NOVO USUÁRIO -->
-    <div class="flex items-center mb-6">
+    <div v-if="isAdmin" class="flex items-center mb-6">
       <button
         class="flex items-center gap-3 group cursor-pointer"
         @click="$router.push('/users/create')"
       >
         <div
-          class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-600 text-white text-xl font-bold shadow-md group-hover:bg-blue-700 transition"
+          class="w-10 h-10 flex items-center justify-center rounded-full bg-purple-600 text-white text-xl font-bold shadow-md group-hover:bg-purple-700 transition"
         >
           +
         </div>
 
         <span
-          class="text-gray-700 font-medium group-hover:text-blue-600 transition"
+          class="text-gray-700 font-medium group-hover:text-purple-600 transition"
         >
           Novo Usuário
         </span>
@@ -158,9 +162,7 @@ function limparFiltros() {
     </div>
 
     <!-- FILTROS -->
-    <!-- FILTROS -->
     <div class="bg-white p-6 rounded-2xl shadow-sm mb-6 border border-gray-100">
-      <!-- HEADER (opcional, dá cara de painel) -->
       <div class="mb-4">
         <h3 class="text-sm font-semibold text-gray-700">Filtros de busca</h3>
         <p class="text-xs text-gray-400">
@@ -168,63 +170,51 @@ function limparFiltros() {
         </p>
       </div>
 
-      <!-- GRID -->
       <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <!-- NOME -->
-        <div class="flex flex-col">
-          <label class="text-xs font-medium text-gray-500 mb-1">Nome</label>
+        <div>
           <input
             v-model="nome"
             placeholder="Buscar por nome"
-            class="px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:border-[#3448EB] focus:ring-2 focus:ring-[#3448EB]/10 outline-none transition"
+            class="px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:border-purple-600 focus:ring-2 focus:ring-purple-600/10 outline-none transition w-full"
           />
         </div>
 
-        <!-- CPF -->
-        <div class="flex flex-col">
-          <label class="text-xs font-medium text-gray-500 mb-1">CPF</label>
+        <div>
           <input
             v-model="cpf"
             @input="cpf = formatCPF($event.target.value)"
             placeholder="000.000.000-00"
-            class="px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:border-[#3448EB] focus:ring-2 focus:ring-[#3448EB]/10 outline-none transition"
+            class="px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:border-purple-600 focus:ring-2 focus:ring-purple-600/10 outline-none transition w-full"
           />
         </div>
 
-        <!-- DATA INÍCIO -->
-        <div class="flex flex-col">
-          <label class="text-xs font-medium text-gray-500 mb-1"
-            >Data início</label
-          >
+        <div>
           <input
             type="date"
             v-model="dataInicio"
-            class="px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:border-[#3448EB] focus:ring-2 focus:ring-[#3448EB]/10 outline-none transition"
+            class="px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:border-purple-600 w-full"
           />
         </div>
 
-        <!-- DATA FIM -->
-        <div class="flex flex-col">
-          <label class="text-xs font-medium text-gray-500 mb-1">Data fim</label>
+        <div>
           <input
             type="date"
             v-model="dataFim"
-            class="px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:border-[#3448EB] focus:ring-2 focus:ring-[#3448EB]/10 outline-none transition"
+            class="px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:border-purple-600 w-full"
           />
         </div>
 
-        <!-- AÇÕES -->
         <div class="flex items-end gap-2">
           <button
             @click="buscarUsers(1)"
-            class="cursor-pointer flex-1 py-2.5 rounded-xl text-white font-medium bg-[#3448EB] hover:bg-[#2f3ed6] active:scale-[0.98] transition-all shadow-sm"
+            class="cursor-pointer flex-1 py-2.5 rounded-xl text-white font-medium bg-purple-600 hover:bg-purple-700 active:scale-[0.98] transition-all shadow-sm"
           >
             Filtrar
           </button>
 
           <button
             @click="limparFiltros"
-            class="cursor-pointer px-4 py-2.5 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-100 active:scale-[0.98] transition"
+            class="cursor-pointer px-4 py-2.5 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-100 transition"
           >
             Limpar
           </button>
@@ -232,10 +222,10 @@ function limparFiltros() {
       </div>
     </div>
 
-    <!-- 🖥️ TABLE DESKTOP -->
+    <!-- TABLE DESKTOP -->
     <div class="hidden md:block bg-white rounded-2xl overflow-hidden shadow-sm">
       <table class="w-full text-sm">
-        <thead class="bg-[#f1f3ff]">
+        <thead class="bg-purple-50">
           <tr>
             <th class="p-4 text-left">Nome</th>
             <th class="p-4 text-left">CPF</th>
@@ -268,32 +258,25 @@ function limparFiltros() {
 
             <td class="p-4">
               <div class="flex justify-end gap-2">
-                <button @click="detalhes(user)" class="cursor-pointer">
+                <button
+                  class="text-purple-600 disabled:opacity-30 cursor-pointer"
+                  @click="detalhes(user)"
+                >
                   🔍
                 </button>
 
                 <button
-                  :disabled="isSelf(user) || isAdmin(user)"
+                  :disabled="!canEdit(user)"
                   @click="editar(user)"
-                  class="transition"
-                  :class="
-                    isSelf(user) || isAdmin(user)
-                      ? 'opacity-40 cursor-not-allowed'
-                      : 'cursor-pointer hover:bg-blue-50 text-blue-600'
-                  "
+                  class="text-purple-600 disabled:opacity-30 cursor-pointer"
                 >
                   ✏️
                 </button>
 
                 <button
-                  :disabled="isSelf(user) || isAdmin(user)"
+                  :disabled="!canDelete(user)"
                   @click="openConfirm(user)"
-                  class="transition"
-                  :class="
-                    isSelf(user) || isAdmin(user)
-                      ? 'opacity-40 cursor-not-allowed'
-                      : 'cursor-pointer hover:bg-red-50 text-red-600'
-                  "
+                  class="text-red-500 disabled:opacity-30 cursor-pointer"
                 >
                   🗑️
                 </button>
@@ -310,7 +293,7 @@ function limparFiltros() {
       </table>
     </div>
 
-    <!-- 📱 MOBILE CARDS (AGORA VOLTOU CERTINHO) -->
+    <!-- MOBILE -->
     <div class="md:hidden space-y-3 mt-4">
       <div
         v-for="user in users"
@@ -327,28 +310,20 @@ function limparFiltros() {
         </div>
 
         <div class="flex justify-end gap-2 mt-3">
-          <button @click="detalhes(user)" class="cursor-pointer">🔍</button>
+          <button @click="detalhes(user)">🔍</button>
 
           <button
-            :disabled="isSelf(user) || isAdmin(user)"
+            :disabled="!canEdit(user)"
             @click="editar(user)"
-            :class="
-              isSelf(user) || isAdmin(user)
-                ? 'opacity-40 cursor-not-allowed'
-                : 'cursor-pointer'
-            "
+            class="text-purple-600 disabled:opacity-30 cursor-pointer"
           >
             ✏️
           </button>
 
           <button
-            :disabled="isSelf(user) || isAdmin(user)"
+            :disabled="!canDelete(user)"
             @click="openConfirm(user)"
-            :class="
-              isSelf(user) || isAdmin(user)
-                ? 'opacity-40 cursor-not-allowed'
-                : 'cursor-pointer'
-            "
+            class="text-red-500 disabled:opacity-30 cursor-pointer"
           >
             🗑️
           </button>
@@ -356,26 +331,46 @@ function limparFiltros() {
       </div>
     </div>
 
-    <!-- 📄 PAGINAÇÃO -->
-    <div class="mt-6 flex flex-col sm:flex-row justify-end items-center gap-4">
-      <div class="text-sm text-gray-600">
-        Página <strong>{{ page }}</strong> de <strong>{{ lastPage }}</strong>
+    <!-- PAGINAÇÃO -->
+    <div
+      class="mt-8 flex flex-col sm:flex-row justify-between items-center gap-4"
+    >
+      <!-- INFO -->
+      <div class="text-sm text-gray-500">
+        Página
+        <span class="font-semibold text-purple-600">{{ page }}</span>
+        de
+        <span class="font-semibold">{{ lastPage }}</span>
       </div>
 
-      <div class="flex gap-2">
+      <!-- PAGINAÇÃO -->
+      <div
+        class="flex items-center gap-2 bg-white border rounded-xl p-1 shadow-sm"
+      >
+        <!-- PREV -->
         <button
           :disabled="page === 1"
           @click="buscarUsers(page - 1)"
-          class="cursor-pointer px-3 py-2 border rounded-lg disabled:opacity-40"
+          class="cursor-pointer px-3 py-2 rounded-lg transition flex items-center gap-1 hover:bg-purple-50 text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed"
         >
           ←
+          <span class="hidden sm:inline">Anterior</span>
         </button>
 
+        <!-- PAGE NUMBER -->
+        <div
+          class="px-4 py-2 rounded-lg bg-purple-600 text-white text-sm font-semibold shadow"
+        >
+          {{ page }}
+        </div>
+
+        <!-- NEXT -->
         <button
           :disabled="page === lastPage"
           @click="buscarUsers(page + 1)"
-          class="cursor-pointer px-3 py-2 border rounded-lg disabled:opacity-40"
+          class="cursor-pointer px-3 py-2 rounded-lg transition flex items-center gap-1 hover:bg-purple-50 text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed"
         >
+          <span class="hidden sm:inline">Próxima</span>
           →
         </button>
       </div>

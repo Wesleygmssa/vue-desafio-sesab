@@ -7,9 +7,8 @@ import { api } from '@/services/api';
 const route = useRoute();
 const router = useRouter();
 const user = ref(null);
-console.log('user', user); // Verificar se o ID está chegando
 
-//  Buscar usuário
+// Buscar usuário
 onMounted(async () => {
   const response = await api.get(`/users/${route.params.id}`);
   user.value = response.data;
@@ -46,10 +45,10 @@ onMounted(async () => {
             <p class="font-semibold text-gray-800">{{ user.email }}</p>
           </div>
 
-          <!-- PERFIL PADRONIZADO -->
-          <div class="p-4 rounded-xl border bg-[#EEF1FF] border-[#3448EB]/20">
-            <span class="text-xs text-[#3448EB]">Perfil</span>
-            <p class="font-semibold text-[#3448EB]">
+          <!-- PERFIL (ROXO PADRÃO) -->
+          <div class="p-4 rounded-xl border bg-purple-50 border-purple-200">
+            <span class="text-xs text-purple-600">Perfil</span>
+            <p class="font-semibold text-purple-700">
               {{ user.profile?.nome || 'Não informado' }}
             </p>
           </div>
@@ -97,7 +96,7 @@ onMounted(async () => {
         </div>
       </div>
 
-      <!-- AÇÕES FIXAS -->
+      <!-- AÇÕES -->
       <div class="flex justify-end gap-3 mt-auto pt-6">
         <button
           class="px-5 py-2 rounded-xl border text-gray-600 hover:bg-gray-100 transition cursor-pointer"
@@ -107,8 +106,7 @@ onMounted(async () => {
         </button>
 
         <button
-          class="px-5 py-2 rounded-xl text-white font-medium transition hover:scale-[1.02] active:scale-[0.98] shadow-sm cursor-pointer"
-          style="background: #3448eb"
+          class="px-5 py-2 rounded-xl text-white font-medium transition hover:scale-[1.02] active:scale-[0.98] shadow-sm cursor-pointer bg-purple-600 hover:bg-purple-700"
           @click="router.push(`/users/${user.id}/edit`)"
         >
           Editar

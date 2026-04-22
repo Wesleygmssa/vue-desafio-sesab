@@ -2,7 +2,6 @@
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { formatCPF } from '@/utils/formatters';
-
 import { api } from '@/services/api';
 import Toast from '@/components/Toast.vue';
 
@@ -21,7 +20,7 @@ const perfis = ref([]);
 const enderecos = ref([]);
 const loading = ref(true);
 
-//  TOAST
+/* TOAST */
 const toast = ref({
   show: false,
   message: '',
@@ -36,7 +35,7 @@ function showToast(message, type = 'success') {
   }, 12000);
 }
 
-// CARREGAR DADOS
+/* CARREGAR */
 onMounted(async () => {
   try {
     const [resUser, resPerfis, resEnderecos] = await Promise.all([
@@ -49,7 +48,7 @@ onMounted(async () => {
 
     user.value = {
       nome: data.nome || '',
-      cpf: formatCPF(data.cpf || ''), // já entra formatado
+      cpf: formatCPF(data.cpf || ''),
       email: data.email || '',
       profile_id: data.profile_id || data.profile?.id || '',
       addresses: Array.isArray(data.addresses)
@@ -67,12 +66,12 @@ onMounted(async () => {
   }
 });
 
-//  ATUALIZAR
+/* ATUALIZAR */
 async function atualizar() {
   try {
     const data = {
       ...user.value,
-      cpf: user.value.cpf.replace(/\D/g, ''), // limpa máscara
+      cpf: user.value.cpf.replace(/\D/g, ''),
     };
 
     await api.put(`/users/${route.params.id}`, data);
@@ -90,7 +89,6 @@ async function atualizar() {
     if (error.response?.data?.message) {
       message = error.response.data.message;
     } else if (error.response?.data?.errors) {
-      // pega o primeiro erro do objeto
       const errors = error.response.data.errors;
       message = Object.values(errors)[0][0];
     }
@@ -125,7 +123,6 @@ async function atualizar() {
         @submit.prevent="atualizar"
         class="space-y-6 flex-1 flex flex-col"
       >
-        <!-- CONTEÚDO -->
         <div class="space-y-6">
           <!-- GRID -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -136,7 +133,7 @@ async function atualizar() {
                 v-model="user.nome"
                 required
                 placeholder="Digite o nome"
-                class="w-full mt-1 px-4 py-2 rounded-xl border bg-gray-50 focus:bg-white focus:outline-none focus:border-[#3448EB] transition"
+                class="w-full mt-1 px-4 py-2 rounded-xl border bg-gray-50 focus:bg-white focus:outline-none focus:border-purple-600 transition"
               />
             </div>
 
@@ -149,7 +146,7 @@ async function atualizar() {
                 maxlength="14"
                 required
                 placeholder="000.000.000-00"
-                class="w-full mt-1 px-4 py-2 rounded-xl border bg-gray-50 focus:bg-white focus:outline-none focus:border-[#3448EB] transition"
+                class="w-full mt-1 px-4 py-2 rounded-xl border bg-gray-50 focus:bg-white focus:outline-none focus:border-purple-600 transition"
               />
             </div>
 
@@ -161,7 +158,7 @@ async function atualizar() {
                 type="email"
                 required
                 placeholder="email@email.com"
-                class="w-full mt-1 px-4 py-2 rounded-xl border bg-gray-50 focus:bg-white focus:outline-none focus:border-[#3448EB] transition"
+                class="w-full mt-1 px-4 py-2 rounded-xl border bg-gray-50 focus:bg-white focus:outline-none focus:border-purple-600 transition"
               />
             </div>
 
@@ -171,7 +168,7 @@ async function atualizar() {
               <select
                 v-model="user.profile_id"
                 required
-                class="w-full mt-1 px-4 py-2 rounded-xl border bg-gray-50 focus:bg-white focus:outline-none focus:border-[#3448EB] transition"
+                class="w-full mt-1 px-4 py-2 rounded-xl border bg-gray-50 focus:bg-white focus:outline-none focus:border-purple-600 transition"
               >
                 <option value="">Selecione</option>
                 <option v-for="p in perfis" :key="p.id" :value="p.id">
@@ -198,7 +195,7 @@ async function atualizar() {
                   :value="e.id"
                   v-model="user.addresses"
                   class="w-4 h-4"
-                  style="accent-color: #3448eb"
+                  style="accent-color: #9333ea"
                 />
 
                 <span class="text-sm text-gray-700">
@@ -226,8 +223,7 @@ async function atualizar() {
 
           <button
             type="submit"
-            class="cursor-pointer px-5 py-2 rounded-xl text-white font-medium transition hover:scale-[1.02] active:scale-[0.98] shadow-sm"
-            style="background: #3448eb"
+            class="cursor-pointer px-5 py-2 rounded-xl text-white font-medium transition hover:scale-[1.02] active:scale-[0.98] shadow-sm bg-purple-600 hover:bg-purple-700"
           >
             Salvar
           </button>
