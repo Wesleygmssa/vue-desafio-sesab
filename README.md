@@ -64,6 +64,12 @@ O sistema inclui:
 npm install
 ```
 
+### Rodar a aplicação
+
+```bash
+npm run dev
+```
+
 ### 👤 Usuário administrador padrão
 
 Após a inicialização do backend, utilize as seguintes credenciais para acessar a aplicação como administrador:
@@ -71,12 +77,6 @@ Após a inicialização do backend, utilize as seguintes credenciais para acessa
 ```
 Login: admin@teste.com
 Senha: senha123
-```
-
-### Rodar a aplicação
-
-```bash
-npm run dev
 ```
 
 ````
