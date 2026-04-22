@@ -11,6 +11,8 @@ O sistema inclui:
 
 ## Demonstração do Projeto
 
+A aplicação em produção pode ser acessada através do link: [https://vue-desafio-sesab.netlify.app](https://vue-desafio-sesab.netlify.app)
+
 ### Visão geral
 
 ![Tela inicial](./screenshots/sistema.gif)
