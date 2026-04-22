@@ -43,12 +43,12 @@ O sistema inclui:
 
 ## ⚙️ Tecnologias utilizadas
 
-- Vue 3
-- Vite
-- Vue Router
-- Axios
-- JavaScript
-- CSS / Tailwind
+- Vue 3 - version 3.5.31
+- Vite - version 8.0.9
+- Vue Router - version 5.0.4
+- Axios - version 1.4.0
+- JavaScript - ES6+
+- CSS / Tailwind - version 4.2.2
 
 ---
 
