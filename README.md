@@ -1,7 +1,3 @@
-## 🏥 Sobre o desafio
-
-Este projeto foi desenvolvido para o desafio técnico proposto pela **SESAB (Secretaria da Saúde do Estado da Bahia)**, com o objetivo de avaliar habilidades em:
-
 ## Objetivo do desafio
 
 Desenvolver uma aplicação frontend moderna com Vue 3, capaz de consumir e manipular dados de uma API, com foco em boas práticas de arquitetura e experiência do usuário.
