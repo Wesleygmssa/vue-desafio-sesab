@@ -3,6 +3,82 @@ import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { api } from '@/services/api';
 
+const router = useRouter();
+const route = useRoute();
+
+/* STATE */
+const user = ref(null);
+
+// desktop collapse
+const isCollapsed = ref(false);
+
+// mobile menu
+const isMobileOpen = ref(false);
+
+/* TIMER AUTO LOGOUT */
+let inactivityTimer = null;
+const INACTIVITY_TIME = 10 * 60 * 1000; // 10 minutos
+
+/* USER */
+function loadUser() {
+  const storedUser = localStorage.getItem('user');
+  user.value = storedUser ? JSON.parse(storedUser) : null;
+}
+
+function handleUserUpdate() {
+  loadUser();
+}
+
+/* SIDEBAR */
+function toggleSidebar() {
+  isCollapsed.value = !isCollapsed.value;
+}
+
+function toggleMobileMenu() {
+  isMobileOpen.value = !isMobileOpen.value;
+}
+
+function closeMobileMenu() {
+  isMobileOpen.value = false;
+}
+
+/* LOGOUT */
+async function logout() {
+  try {
+    await api.post('/logout');
+  } catch (error) {
+    console.error(error);
+  } finally {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    router.push('/login');
+  }
+}
+
+/* AUTO LOGOUT */
+function resetInactivityTimer() {
+  if (inactivityTimer) clearTimeout(inactivityTimer);
+
+  inactivityTimer = setTimeout(() => {
+    logout();
+  }, INACTIVITY_TIME);
+}
+
+function setupActivityListeners() {
+  window.addEventListener('mousemove', resetInactivityTimer);
+  window.addEventListener('keydown', resetInactivityTimer);
+  window.addEventListener('click', resetInactivityTimer);
+  window.addEventListener('scroll', resetInactivityTimer);
+}
+
+function removeActivityListeners() {
+  window.removeEventListener('mousemove', resetInactivityTimer);
+  window.removeEventListener('keydown', resetInactivityTimer);
+  window.removeEventListener('click', resetInactivityTimer);
+  window.removeEventListener('scroll', resetInactivityTimer);
+}
+
+/* RESPONSIVE */
 function checkScreenSize() {
   const width = window.innerWidth;
 
@@ -17,71 +93,28 @@ function checkScreenSize() {
   }
 }
 
+/* LIFECYCLE */
 onMounted(() => {
   loadUser();
+
   window.addEventListener('user-updated', handleUserUpdate);
+  window.addEventListener('resize', checkScreenSize);
 
   checkScreenSize();
-  window.addEventListener('resize', checkScreenSize);
+
+  // 🔥 AUTO LOGOUT START
+  setupActivityListeners();
+  resetInactivityTimer();
 });
 
 onUnmounted(() => {
   window.removeEventListener('user-updated', handleUserUpdate);
   window.removeEventListener('resize', checkScreenSize);
+
+  removeActivityListeners();
+
+  if (inactivityTimer) clearTimeout(inactivityTimer);
 });
-
-const router = useRouter();
-const route = useRoute();
-
-const user = ref(null);
-
-// desktop collapse
-const isCollapsed = ref(false);
-
-// mobile menu
-const isMobileOpen = ref(false);
-
-function toggleSidebar() {
-  isCollapsed.value = !isCollapsed.value;
-}
-
-function toggleMobileMenu() {
-  isMobileOpen.value = !isMobileOpen.value;
-}
-
-function closeMobileMenu() {
-  isMobileOpen.value = false;
-}
-
-function loadUser() {
-  const storedUser = localStorage.getItem('user');
-  user.value = storedUser ? JSON.parse(storedUser) : null;
-}
-
-function handleUserUpdate() {
-  loadUser();
-}
-
-onMounted(() => {
-  loadUser();
-  window.addEventListener('user-updated', handleUserUpdate);
-});
-
-onUnmounted(() => {
-  window.removeEventListener('user-updated', handleUserUpdate);
-});
-
-async function logout() {
-  try {
-    await api.post('/logout');
-  } catch (error) {
-    console.error(error);
-  } finally {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    router.push('/login');
-  }
-}
 </script>
 
 <template>
