@@ -13,27 +13,32 @@ const routes = [
     component: Login,
   },
 
+  // USERS
   {
     path: '/users',
     component: Users,
     meta: { requiresAuth: true },
   },
-
   {
     path: '/users/create',
     component: () => import('../views/User/CreateUser.vue'),
     meta: { requiresAuth: true },
   },
-
   {
     path: '/users/:id',
     component: () => import('../views/User/UserDetails.vue'),
     meta: { requiresAuth: true },
   },
-
   {
     path: '/users/:id/edit',
     component: () => import('../views/User/EditUser.vue'),
+    meta: { requiresAuth: true },
+  },
+
+  // ADDRESSES
+  {
+    path: '/addresses/create',
+    component: () => import('../views/Addresses/Create.vue'),
     meta: { requiresAuth: true },
   },
 ];
@@ -43,7 +48,7 @@ const router = createRouter({
   routes,
 });
 
-//  PROTEÇÃO DE ROTAS
+// PROTEÇÃO
 router.beforeEach((to) => {
   const token = localStorage.getItem('token');
 

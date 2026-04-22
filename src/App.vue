@@ -166,12 +166,27 @@ async function logout() {
           <span v-if="!isCollapsed" class="text-sm">Perfis</span>
         </div>
 
-        <div
-          class="flex items-center gap-3 px-3 py-2 rounded-lg opacity-40 cursor-not-allowed"
+        <router-link
+          to="/addresses/create"
+          @click="closeMobileMenu"
+          class="flex items-center gap-3 px-3 py-2 rounded-lg transition relative"
+          :class="
+            route.path === '/addresses/create'
+              ? 'bg-white/15'
+              : 'hover:bg-white/10'
+          "
         >
           <div class="text-lg">📍</div>
-          <span v-if="!isCollapsed" class="text-sm">Endereços</span>
-        </div>
+
+          <span v-if="!isCollapsed" class="text-sm font-medium">
+            Endereços
+          </span>
+
+          <span
+            v-if="route.path === '/addresses/create'"
+            class="absolute left-0 top-1 bottom-1 w-1 bg-white rounded-r-full"
+          ></span>
+        </router-link>
       </nav>
     </aside>
 
