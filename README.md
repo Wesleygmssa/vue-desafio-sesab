@@ -70,6 +70,15 @@ npm install
 npm run dev
 ```
 
+### Opcional: Rodar em docker
+
+Docker version 29.4.1
+Docker Compose version v5.1.3
+
+```bash
+sudo docker compose up --build
+```
+
 ### 👤 Usuário administrador padrão
 
 Após a inicialização do backend, utilize as seguintes credenciais para acessar a aplicação como administrador:

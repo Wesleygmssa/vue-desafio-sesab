@@ -14,12 +14,25 @@ const users = ref([]);
 const page = ref(1);
 const lastPage = ref(1);
 
+const total = ref(0);
+const perPage = ref(0);
+
 const nome = ref('');
 const cpf = ref('');
 const dataInicio = ref('');
 const dataFim = ref('');
 
 const loading = ref(false);
+
+/* PAGINAÇÃO TEXTO */
+const showingText = computed(() => {
+  const start = (page.value - 1) * perPage.value + 1;
+  const end = Math.min(page.value * perPage.value, total.value);
+
+  if (!total.value) return 'Nenhum registro';
+
+  return `Mostrando ${start} até ${end} de ${total.value} registros`;
+});
 
 /* TOAST */
 const toast = ref({ show: false, message: '', type: 'success' });
@@ -67,6 +80,9 @@ async function buscarUsers(p = 1) {
     users.value = response.data.data;
     page.value = response.data.current_page;
     lastPage.value = response.data.last_page;
+
+    total.value = response.data.total;
+    perPage.value = response.data.per_page;
   } catch (error) {
     showToast('Erro ao buscar usuários', 'error');
   } finally {
@@ -224,7 +240,6 @@ function limparFiltros() {
     </div>
 
     <!-- TABLE DESKTOP -->
-
     <div class="hidden md:block">
       <div class="relative bg-white rounded-2xl overflow-hidden shadow-sm">
         <LoadingOverlay :show="loading" />
@@ -243,18 +258,6 @@ function limparFiltros() {
           </thead>
 
           <tbody>
-            <!-- <div
-            v-if="loading"
-            class="absolute inset-0 bg-white/20 backdrop-blur-sm flex items-center justify-center z-10"
-          >
-            <div class="flex items-center gap-3">
-              <div
-                class="w-5 h-5 border-2 border-purple-600 border-t-transparent rounded-full animate-spin"
-              ></div>
-              <span class="text-gray-600 font-medium">Loading...</span>
-            </div>
-          </div> -->
-
             <tr
               v-for="user in users"
               :key="user.id"
@@ -269,10 +272,7 @@ function limparFiltros() {
 
               <td class="p-4">
                 <div class="flex justify-end gap-2">
-                  <button
-                    class="text-purple-600 disabled:opacity-30 cursor-pointer"
-                    @click="detalhes(user)"
-                  >
+                  <button @click="detalhes(user)" class="cursor-pointer">
                     🔍
                   </button>
 
@@ -308,6 +308,7 @@ function limparFiltros() {
     <!-- MOBILE -->
     <div class="md:hidden space-y-3 mt-4">
       <LoadingOverlay :show="loading" />
+
       <div
         v-for="user in users"
         :key="user.id"
@@ -350,41 +351,33 @@ function limparFiltros() {
     >
       <!-- INFO -->
       <div class="text-sm text-gray-500">
-        Página
-        <span class="font-semibold text-purple-600">{{ page }}</span>
-        de
-        <span class="font-semibold">{{ lastPage }}</span>
+        {{ showingText }}
       </div>
 
       <!-- PAGINAÇÃO -->
       <div
         class="flex items-center gap-2 bg-white border rounded-xl p-1 shadow-sm"
       >
-        <!-- PREV -->
         <button
           :disabled="page === 1"
           @click="buscarUsers(page - 1)"
           class="cursor-pointer px-3 py-2 rounded-lg transition flex items-center gap-1 hover:bg-purple-50 text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed"
         >
-          ←
-          <span class="hidden sm:inline">Anterior</span>
+          ← <span class="hidden sm:inline">Anterior</span>
         </button>
 
-        <!-- PAGE NUMBER -->
         <div
           class="px-4 py-2 rounded-lg bg-purple-600 text-white text-sm font-semibold shadow"
         >
           {{ page }}
         </div>
 
-        <!-- NEXT -->
         <button
           :disabled="page === lastPage"
           @click="buscarUsers(page + 1)"
           class="cursor-pointer px-3 py-2 rounded-lg transition flex items-center gap-1 hover:bg-purple-50 text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed"
         >
-          <span class="hidden sm:inline">Próxima</span>
-          →
+          <span class="hidden sm:inline">Próxima</span> →
         </button>
       </div>
     </div>
