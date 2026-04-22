@@ -194,7 +194,7 @@ onMounted(() => {
           <button
             type="submit"
             :disabled="loadingSave"
-            class="px-6 py-2 bg-purple-600 text-white rounded-xl hover:bg-purple-700 disabled:opacity-50"
+            class="cursor-pointer px-6 py-2 bg-purple-600 text-white rounded-xl hover:bg-purple-700 disabled:opacity-50"
           >
             <span v-if="loadingSave">Salvando...</span>
             <span v-else>Salvar</span>
