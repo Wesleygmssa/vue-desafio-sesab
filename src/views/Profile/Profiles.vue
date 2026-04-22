@@ -3,18 +3,27 @@ import { ref, onMounted } from 'vue';
 import { api } from '@/services/api';
 import Toast from '@/components/Toast.vue';
 import LoadingOverlay from '@/components/LoadingOverlay.vue';
+import DynamicModalForm from '@/components/DynamicModalForm.vue';
+import BaseModal from '@/components/BaseModal.vue';
 
-/* STATE FORM */
+/* CREATE FORM */
 const profile = ref({
   nome: '',
 });
 
-/* LISTA */
+/* LIST */
 const profiles = ref([]);
+
+/* EDIT MODAL */
+const showModal = ref(false);
+const editingProfileId = ref(null);
+
+const editForm = ref({
+  nome: '',
+});
 
 /* LOADING */
 const loadingSave = ref(false);
-const loadingProfile = ref(false);
 const loadingList = ref(false);
 
 /* TOAST */
@@ -24,6 +33,14 @@ const toast = ref({
   type: 'success',
 });
 
+const editFields = [
+  {
+    key: 'nome',
+    label: 'Nome',
+    type: 'text',
+  },
+];
+
 function showToast(message, type = 'success') {
   toast.value = { show: true, message, type };
 
@@ -32,38 +49,15 @@ function showToast(message, type = 'success') {
   }, 3000);
 }
 
-/* VALIDAR */
+/* VALIDATE CREATE */
 function validateForm() {
-  if (!profile.value.nome || !profile.value.nome.trim()) {
+  if (!profile.value.nome?.trim()) {
     return 'O campo nome é obrigatório';
   }
   return null;
 }
 
-/* CARREGAR PERFIL (individual opcional) */
-async function loadProfile() {
-  try {
-    loadingProfile.value = true;
-
-    const res = await api.get('/profile');
-
-    const response = res.data;
-
-    const profileData = Array.isArray(response)
-      ? response[0]
-      : (response.data ?? response);
-
-    profile.value = {
-      nome: profileData?.nome || '',
-    };
-  } catch (error) {
-    console.error(error);
-  } finally {
-    loadingProfile.value = false;
-  }
-}
-
-/* LISTAR PERFIS */
+/* LOAD LIST */
 async function loadProfiles() {
   try {
     loadingList.value = true;
@@ -79,23 +73,21 @@ async function loadProfiles() {
   }
 }
 
-/* SALVAR PERFIL */
+/* CREATE */
 async function salvar() {
-  const errorMsg = validateForm();
+  const error = validateForm();
 
-  if (errorMsg) {
-    showToast(errorMsg, 'error');
+  if (error) {
+    showToast(error, 'error');
     return;
   }
 
   try {
     loadingSave.value = true;
 
-    const payload = {
+    await api.post('/profiles', {
       nome: profile.value.nome.trim(),
-    };
-
-    await api.post('/profiles', payload);
+    });
 
     showToast('Perfil criado com sucesso!', 'success');
 
@@ -104,13 +96,7 @@ async function salvar() {
     await loadProfiles();
   } catch (error) {
     console.error(error);
-
-    const message =
-      error.response?.data?.message ||
-      Object.values(error.response?.data?.errors || {})?.[0]?.[0] ||
-      'Erro ao salvar perfil';
-
-    showToast(message, 'error');
+    showToast('Erro ao salvar perfil', 'error');
   } finally {
     loadingSave.value = false;
   }
@@ -130,8 +116,49 @@ async function deleteProfile(id) {
   }
 }
 
+/* OPEN EDIT MODAL */
+function openEditModal(profileItem) {
+  editingProfileId.value = profileItem.id;
+
+  editForm.value = {
+    nome: profileItem.nome,
+  };
+
+  showModal.value = true;
+}
+
+/* UPDATE */
+async function updateProfile() {
+  if (!editForm.value.nome?.trim()) {
+    showToast('O nome é obrigatório', 'error');
+    return;
+  }
+
+  try {
+    loadingSave.value = true;
+
+    await api.put(`/profiles/${editingProfileId.value}`, {
+      nome: editForm.value.nome.trim(),
+    });
+
+    showToast('Perfil atualizado com sucesso!', 'success');
+
+    showModal.value = false;
+
+    await loadProfiles();
+  } catch (error) {
+    console.error(error);
+
+    showToast(
+      error.response?.data?.message || 'Erro ao atualizar perfil',
+      'error'
+    );
+  } finally {
+    loadingSave.value = false;
+  }
+}
+
 onMounted(() => {
-  loadProfile();
   loadProfiles();
 });
 </script>
@@ -147,39 +174,37 @@ onMounted(() => {
     />
 
     <div class="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
-      <!-- HEADER -->
+      <!-- TITLE -->
       <h1 class="text-2xl font-bold text-gray-800 mb-8">Gerenciar Perfis</h1>
 
-      <!-- FORM -->
+      <!-- CREATE FORM -->
       <form @submit.prevent="salvar" class="space-y-6">
         <div>
-          <label class="text-sm font-medium text-gray-600"> Nome </label>
+          <label class="text-sm font-medium text-gray-600">Nome</label>
 
           <input
             v-model="profile.nome"
             type="text"
             class="input"
-            placeholder="Digite o nome do perfil"
+            placeholder="Digite o nome"
           />
         </div>
 
-        <div class="flex justify-end pt-4 border-t">
+        <div class="flex justify-end">
           <button
             type="submit"
             :disabled="loadingSave"
-            class="cursor-pointer px-6 py-2.5 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition disabled:opacity-50"
+            class="px-6 py-2 bg-purple-600 text-white rounded-xl hover:bg-purple-700 disabled:opacity-50"
           >
             <span v-if="loadingSave">Salvando...</span>
-            <span v-else>Salvar perfil</span>
+            <span v-else>Salvar</span>
           </button>
         </div>
       </form>
 
-      <!-- LISTA -->
+      <!-- LIST -->
       <div class="mt-10">
-        <h2 class="text-lg font-semibold text-gray-700 mb-4">
-          Perfis cadastrados
-        </h2>
+        <h2 class="text-lg font-semibold mb-4">Perfis cadastrados</h2>
 
         <LoadingOverlay v-if="loadingList" :show="true" />
 
@@ -187,24 +212,68 @@ onMounted(() => {
           <div
             v-for="p in profiles"
             :key="p.id"
-            class="flex justify-between items-center p-4 border rounded-xl bg-gray-50 hover:bg-gray-100 transition"
+            class="flex justify-between items-center p-4 border rounded-xl bg-gray-50"
           >
-            <div>
-              <p class="font-medium text-gray-800">
-                {{ p.nome }}
-              </p>
-            </div>
+            <span class="font-medium">
+              {{ p.nome }}
+            </span>
 
-            <button
-              @click="deleteProfile(p.id)"
-              class="cursor-pointer px-3 py-1 text-sm text-red-600 hover:bg-red-100 rounded-lg transition"
-            >
-              Excluir
-            </button>
+            <div class="flex gap-2">
+              <button
+                @click="openEditModal(p)"
+                class="cursor-pointer px-3 py-1 text-sm text-blue-600 hover:bg-blue-100 rounded-lg"
+              >
+                Editar
+              </button>
+
+              <button
+                @click="deleteProfile(p.id)"
+                class="cursor-pointer px-3 py-1 text-sm text-red-600 hover:bg-red-100 rounded-lg"
+              >
+                Excluir
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- MODAL EDIT -->
+    <BaseModal
+      :show="showModal"
+      title="Editar Perfil"
+      max-width="max-w-md"
+      @close="showModal = false"
+    >
+      <input v-model="editForm.nome" type="text" class="input" />
+
+      <div class="flex justify-end gap-3 mt-6">
+        <button
+          @click="showModal = false"
+          class="cursor-pointer px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300"
+        >
+          Cancelar
+        </button>
+
+        <button
+          @click="updateProfile"
+          :disabled="loadingSave"
+          class="cursor-pointer px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50"
+        >
+          <span v-if="loadingSave">Salvando...</span>
+          <span v-else>Salvar</span>
+        </button>
+      </div>
+    </BaseModal>
+
+    <!-- <DynamicModalForm
+      v-model:show="showModal"
+      v-model="editForm"
+      :fields="editFields"
+      title="Editar Perfil"
+      :loading="loadingSave"
+      @save="updateProfile"
+    /> -->
   </div>
 </template>
 
