@@ -1,11 +1,8 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
 import { api } from '@/services/api';
 import Toast from '@/components/Toast.vue';
 import LoadingOverlay from '@/components/LoadingOverlay.vue';
-
-const router = useRouter();
 
 /* FORM */
 const address = ref({
@@ -21,7 +18,8 @@ const address = ref({
 const addresses = ref([]);
 
 /* LOADING */
-const loading = ref(false);
+const loadingSave = ref(false);
+const loadingList = ref(false);
 
 /* TOAST */
 const toast = ref({
@@ -38,35 +36,58 @@ function showToast(message, type = 'success') {
   }, 3000);
 }
 
+/* VALIDAR CAMPOS */
+function validateForm() {
+  const fields = Object.entries(address.value);
+
+  for (const [key, value] of fields) {
+    if (!value || !value.toString().trim()) {
+      return `O campo ${key} é obrigatório`;
+    }
+  }
+
+  return null;
+}
+
 /* CARREGAR LISTA */
 async function loadAddresses() {
   try {
+    loadingList.value = true;
     const res = await api.get('/addresses');
     addresses.value = res.data;
   } catch (error) {
     console.error(error);
+    showToast('Erro ao carregar endereços', 'error');
+  } finally {
+    loadingList.value = false;
   }
 }
 
 /* SALVAR */
 async function salvar() {
+  const errorMsg = validateForm();
+
+  if (errorMsg) {
+    showToast(errorMsg, 'error');
+    return;
+  }
+
   try {
-    loading.value = true;
+    loadingSave.value = true;
 
     const payload = {
-      logradouro: address.value.logradouro?.trim(),
-      numero: address.value.numero?.trim(),
-      bairro: address.value.bairro?.trim(),
-      cidade: address.value.cidade?.trim(),
-      estado: address.value.estado?.trim(),
-      cep: address.value.cep?.trim(),
+      logradouro: address.value.logradouro.trim(),
+      numero: address.value.numero.trim(),
+      bairro: address.value.bairro.trim(),
+      cidade: address.value.cidade.trim(),
+      estado: address.value.estado.trim(),
+      cep: address.value.cep.trim(),
     };
 
     await api.post('/addresses', payload);
 
     showToast('Endereço criado com sucesso!', 'success');
 
-    /* limpa form */
     address.value = {
       logradouro: '',
       numero: '',
@@ -76,7 +97,7 @@ async function salvar() {
       cep: '',
     };
 
-    loadAddresses();
+    await loadAddresses();
   } catch (error) {
     console.error(error);
 
@@ -87,7 +108,7 @@ async function salvar() {
 
     showToast(message, 'error');
   } finally {
-    loading.value = false;
+    loadingSave.value = false;
   }
 }
 
@@ -95,18 +116,14 @@ async function salvar() {
 async function deleteAddress(id) {
   try {
     await api.delete(`/addresses/${id}`);
-
     showToast('Endereço removido com sucesso!', 'success');
-
     loadAddresses();
   } catch (error) {
     console.error(error);
-
     showToast('Erro ao excluir endereço', 'error');
   }
 }
 
-/* INIT */
 onMounted(() => {
   loadAddresses();
 });
@@ -126,11 +143,8 @@ onMounted(() => {
       <!-- HEADER -->
       <h1 class="text-2xl font-bold text-gray-800 mb-8">Gerenciar Endereços</h1>
 
-      <!-- LOADING -->
-      <LoadingOverlay v-if="loading" :show="loading" />
-
       <!-- FORM -->
-      <form v-else @submit.prevent="salvar" class="space-y-6">
+      <form @submit.prevent="salvar" class="space-y-6">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>
             <label class="text-sm font-medium text-gray-600">Logradouro</label>
@@ -166,9 +180,11 @@ onMounted(() => {
         <div class="flex justify-end pt-4 border-t">
           <button
             type="submit"
-            class="cursor-pointer px-6 py-2.5 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition"
+            :disabled="loadingSave"
+            class="cursor-pointer px-6 py-2.5 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition disabled:opacity-50"
           >
-            Salvar
+            <span v-if="loadingSave">Salvando...</span>
+            <span v-else>Salvar</span>
           </button>
         </div>
       </form>
@@ -179,7 +195,10 @@ onMounted(() => {
           Endereços cadastrados
         </h2>
 
-        <div class="space-y-3">
+        <!-- LOADING LISTA -->
+        <LoadingOverlay v-if="loadingList" :show="true" />
+
+        <div v-else class="space-y-3">
           <div
             v-for="a in addresses"
             :key="a.id"

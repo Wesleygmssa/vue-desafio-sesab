@@ -159,12 +159,23 @@ async function logout() {
           ></span>
         </router-link>
 
-        <div
-          class="flex items-center gap-3 px-3 py-2 rounded-lg opacity-40 cursor-not-allowed"
+        <router-link
+          to="/profiles"
+          @click="closeMobileMenu"
+          class="flex items-center gap-3 px-3 py-2 rounded-lg transition relative"
+          :class="
+            route.path === '/profiles' ? 'bg-white/15' : 'hover:bg-white/10'
+          "
         >
           <div class="text-lg">👤</div>
-          <span v-if="!isCollapsed" class="text-sm">Perfis</span>
-        </div>
+
+          <span v-if="!isCollapsed" class="text-sm font-medium"> Perfis </span>
+
+          <span
+            v-if="route.path === '/profiles'"
+            class="absolute left-0 top-1 bottom-1 w-1 bg-white rounded-r-full"
+          ></span>
+        </router-link>
 
         <router-link
           to="/addresses/create"
