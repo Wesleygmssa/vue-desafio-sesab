@@ -15,7 +15,7 @@ O sistema inclui:
 
 ```
 git clone git@github.com:Wesleygmssa/vue-desafio-sesab.git
-cd api-desafio-sesab
+cd vue-desafio-sesab
 ```
 
 ## Demonstração do Projeto
