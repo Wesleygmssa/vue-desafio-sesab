@@ -13,6 +13,11 @@ O sistema inclui:
 
 [https://vue-desafio-sesab.netlify.app](https://vue-desafio-sesab.netlify.app)
 
+```
+git clone git@github.com:Wesleygmssa/vue-desafio-sesab.git
+cd api-desafio-sesab
+```
+
 ## Demonstração do Projeto
 
 ### Visão geral
