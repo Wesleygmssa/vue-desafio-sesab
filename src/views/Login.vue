@@ -98,9 +98,23 @@ async function login() {
           <button
             @click="login"
             :disabled="loading"
-            class="cursor-pointer w-full py-3 rounded-xl text-white font-semibold bg-gradient-to-r from-purple-600 to-violet-700 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 shadow-lg disabled:opacity-50"
+            class="cursor-pointer w-full py-3 rounded-xl text-white font-semibold bg-gradient-to-r from-purple-600 to-violet-700 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 shadow-lg disabled:opacity-50 flex items-center justify-center gap-1"
           >
-            <span v-if="loading">Entrando...</span>
+            <span v-if="loading" class="flex items-center gap-1">
+              Entrando
+              <span class="flex gap-1">
+                <span
+                  class="w-1.5 h-1.5 bg-white rounded-full animate-bounce [animation-delay:-0.3s]"
+                ></span>
+                <span
+                  class="w-1.5 h-1.5 bg-white rounded-full animate-bounce [animation-delay:-0.15s]"
+                ></span>
+                <span
+                  class="w-1.5 h-1.5 bg-white rounded-full animate-bounce"
+                ></span>
+              </span>
+            </span>
+
             <span v-else>Entrar</span>
           </button>
 
