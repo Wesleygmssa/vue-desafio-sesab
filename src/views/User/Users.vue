@@ -6,6 +6,7 @@ import { api } from '@/services/api';
 import Toast from '@/components/Toast.vue';
 import ConfirmModal from '@/components/ConfirmModal.vue';
 import LoadingOverlay from '@/components/LoadingOverlay.vue';
+import Tooltip from '@/components/Tooltip.vue';
 
 const router = useRouter();
 
@@ -272,25 +273,31 @@ function limparFiltros() {
 
               <td class="p-4">
                 <div class="flex justify-end gap-2">
-                  <button @click="detalhes(user)" class="cursor-pointer">
-                    🔍
-                  </button>
+                  <Tooltip text="Ver detalhes">
+                    <button @click="detalhes(user)" class="cursor-pointer">
+                      🔍
+                    </button>
+                  </Tooltip>
 
-                  <button
-                    :disabled="!canEdit(user)"
-                    @click="editar(user)"
-                    class="text-purple-600 disabled:opacity-30 cursor-pointer"
-                  >
-                    ✏️
-                  </button>
+                  <Tooltip text="Editar usuário">
+                    <button
+                      :disabled="!canEdit(user)"
+                      @click="editar(user)"
+                      class="text-purple-600 disabled:opacity-30 cursor-pointer"
+                    >
+                      ✏️
+                    </button>
+                  </Tooltip>
 
-                  <button
-                    :disabled="!canDelete(user)"
-                    @click="openConfirm(user)"
-                    class="text-red-500 disabled:opacity-30 cursor-pointer"
-                  >
-                    🗑️
-                  </button>
+                  <Tooltip text="Excluir usuário">
+                    <button
+                      :disabled="!canDelete(user)"
+                      @click="openConfirm(user)"
+                      class="text-red-500 disabled:opacity-30 cursor-pointer"
+                    >
+                      🗑️
+                    </button>
+                  </Tooltip>
                 </div>
               </td>
             </tr>

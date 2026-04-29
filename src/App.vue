@@ -149,7 +149,7 @@ onUnmounted(() => {
       <!-- HEADER SIDEBAR -->
       <div class="flex items-center justify-between px-4 mb-8">
         <h2 v-if="!isCollapsed" class="text-lg font-semibold tracking-wide">
-          SESAB
+          Dashboard
         </h2>
 
         <!-- botão collapse desktop -->

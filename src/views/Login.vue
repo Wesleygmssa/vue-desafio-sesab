@@ -109,6 +109,18 @@ async function login() {
             {{ error }}
           </p>
 
+          <!-- CRIAR CONTA -->
+          <div class="text-center">
+            <p class="text-sm text-gray-500">
+              Não tem uma conta?
+              <router-link
+                to="/register"
+                class="text-purple-600 hover:underline"
+              >
+                Criar conta
+              </router-link>
+            </p>
+          </div>
           <!-- USUÁRIO TESTE -->
           <div class="mt-4 p-4 rounded-xl border bg-gray-50 text-center">
             <p class="text-sm text-gray-500 mb-2">Usuário e senha para teste</p>
